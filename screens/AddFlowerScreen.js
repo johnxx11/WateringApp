@@ -40,7 +40,7 @@ const AddFlowerScreen = ({ navigation }) => {
                 onChangeText={(text) => setType(text)}
             />
             <Input
-                placeholder="Humidity (defualt is 20%)" 
+                placeholder="Humidity (default is 20%)" 
                 value={humidity} 
                 onChangeText={(text) => setHumidity(text)}
                 onSubmitEditing={addPlant}
