@@ -6,6 +6,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import AddFlowerScreen from './screens/AddFlowerScreen';
+import FlowerScreen from './screens/FlowerScreen';
+import VerificationScreen from './screens/VerificationScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -22,8 +24,10 @@ export default function App() {
       <Stack.Navigator screenOptions={globalScreenOptions}>
         <Stack.Screen name='Login' component={LoginScreen}/>
         <Stack.Screen name='Register' component={RegisterScreen}/>
+        <Stack.Screen name='Verification' component={VerificationScreen}/>
         <Stack.Screen name='Home' component={HomeScreen}/>
         <Stack.Screen name='AddFlower' component={AddFlowerScreen}/>
+        <Stack.Screen name='Flower' component={FlowerScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

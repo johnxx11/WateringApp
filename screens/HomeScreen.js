@@ -59,11 +59,13 @@ const HomeScreen = ({ navigation }) => {
     }, [navigation]);
 
 
+
     return (
       <SafeAreaView>
         <StatusBar style="light" />
         <ScrollView style={styles.container} >
             <Text style={styles.welcomeMessage}>Hi nickname, welcome to your smart plant care system</Text>
+
         </ScrollView>
         <Button onPress={() => navigation.navigate('AddFlower')} title="Add new plant" containerStyle={styles.button}/>
       </SafeAreaView>

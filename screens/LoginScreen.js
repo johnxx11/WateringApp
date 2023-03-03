@@ -10,7 +10,7 @@ const LoginScreen = ({ navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: "Watering Flower",
+            title: "Water Flower",
             headerStyle: { backgroundColor: "#008000" },
             headerBackVisible: false,
             headerTitle: () => (
@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }) => {
                 }}>
   
                     <Text style={{ color: "white", fontWeight: "800", fontSize: 18}}>
-                        Watering Flower
+                        Water Flower
                     </Text>
                 </View>
             )
@@ -69,7 +69,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
     inputContainer:{
-        width: 300
+        width: 260
     },
     button: {
         width: 160,

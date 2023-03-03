@@ -6,9 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 
 const RegisterScreen = ({ navigation }) => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [code, setCode] = useState("");
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -37,7 +35,7 @@ const RegisterScreen = ({ navigation }) => {
     }, [navigation]);
 
     const register = () => {
-        navigation.navigate('Verification');
+        navigation.navigate('Login');
     }
 
     return (
@@ -55,26 +53,11 @@ const RegisterScreen = ({ navigation }) => {
             </TouchableOpacity>
             <View style={styles.inputContainer}>
                 <Input 
-                    placeholder='User Name' 
+                    placeholder='Enter verification code' 
                     style={styles.textInput}
                     type='text' 
-                    value={name}
-                    onChangeText={text => setName(text)}
-                />
-                <Input 
-                    style={styles.textInput}
-                    placeholder='Email' 
-                    type='email' 
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                />
-                <Input 
-                    style={styles.textInput}
-                    placeholder='Password' 
-                    secureTextEntry
-                    type='password' 
-                    value={password}
-                    onChangeText={text => setPassword(text)}
+                    value={code}
+                    onChangeText={text => setCode(text)}
                     onSubmitEditing={register}
                 />
             </View>
@@ -83,8 +66,8 @@ const RegisterScreen = ({ navigation }) => {
                 containerStyle={styles.button}
                 raised 
                 onPress={register} 
-                title="Continue" 
-                disabled={!name || !email || !password || name.trim() === "" || email.trim() === "" || password.trim() === ""}
+                title="Register Account" 
+                disabled={!code || code.trim() == ""}
             />
         </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
@@ -106,7 +89,7 @@ const styles = StyleSheet.create({
         
     },
     inputContainer: {
-        width: 260,
+        width: 200,
     },
     textInput: {
         flex: 1,
