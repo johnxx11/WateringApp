@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/common.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-type" content="txt/html; charset=utf-8" />
+    <title>Setting</title>
+</head>
+<body>
+	<main>
+		<div class="container" style="margin-top: 40px">
+			<div class="row">
+				<div class="col s12 m6 offset-m3 center">
+					<h3 class="header">Setting</h3>
+				</div>
+			</div>
+			<div class="row upload">
+				<div class="col s12 m6 offset-m3 center">
+					<label class="red btn" for="file-input">Take a photo of your plant</label>
+					<input type="file" accept="image/*" id="file-input" capture="environment" style="opacity: 0;"/>
+				</div>
+			</div>
+
+			<div class="row loader center hide">
+                <div class="preloader-wrapper big active">
+                  <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+			<div class="row">
+				<form class="col s12 hide">
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<input name="plant_name" id="plant_name" type="text" placeholder="">
+							<label for="plant_name">plant name</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<input name="plant_humidity" id="plant_humidity" type="text" value="0" placeholder="">
+							<label for="plant_humidity">humidity</label>
+						</div>
+					</div>
+					<div id="reader"></div>
+					<div class="row sensor-area">
+						<div class="col s8">
+							<label for="sensor">sensor code</label>
+							<input name="sensor" id="sensor" type="text" placeholder="">
+						</div>
+						<div class="col s2" style="margin-top: 20px">
+							<label class="red btn" for="qr-input-file">Scan qrcode</label>
+							<input type="file" id="qr-input-file" accept="image/*" capture="environment" style="opacity: 0;" />
+						</div>
+						
+					</div>
+					<div >
+						
+					</div>
+					<br>
+					<input name="plant_url" id="plant_url" type="hidden"/>
+					<div class="row">
+						<div class="input-field col s4">
+							<a href="javascript:$('form').submit()"
+								class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12"
+								style="border-radius: 50px">Save</a>
+						</div>
+						<div class="input-field col s4">
+							<a href="./index.html"
+								class="btn blue waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12"
+								style="border-radius: 50px">Cancel</a>
+						</div>
+						<div class="input-field col s4 right">
+							<a id="btn-delete" href="javascript:void(0)"
+								class="btn red waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12"
+								style="border-radius: 50px">Delete</a>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="row hide" id= "result_list">
+				<ul class="collection">
+			    	<a href="#" class="collection-item hide" id="results">Alvin</a>
+			  </ul>
+			  <div class="row center">
+					<div class="col s12">
+						<a href="javascript:void(0)"
+								class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange skip-btn">Skip</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	
+	<!-- <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/5.16.0/load-image.all.min.js" integrity="sha512-49bX8bdwg7bdT8H0DA60GZnVm+6FqR+lq2kRra4tfwh3Fytlrq92U3kpHWH+gDOOb3HyyQNX7EJ6+yKoKArNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- <script type="text/javascript" src="https://cdn.staticfile.org/materialize/1.0.0/js/materialize.min.js"></script> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+	<script type="text/javascript" src="js/func.js"></script>
+	<script type="text/javascript" src="js/html5-qrcode.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var sensorId = getQueryString("sensor") || $.cookie('sensor');
+			if(sensorId && sensorId.length == 12){
+				$.cookie('sensor', sensorId);
+			}
+
+			if(!$.cookie('token')){
+          window.location.href = "login.html";
+          return;
+      }
+
+	    document.getElementById('file-input').onchange = function () {
+	    	var file = this.files[0];
+				loadImage(file, function (img, data) {
+		        if (data.imageHead && data.exif) {
+		          loadImage.writeExifData(data.imageHead, data, "Orientation", 1);
+		          img.toBlob(function (blob) {
+		            loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
+		              uploadFile(new File([newBlob], file.name, {type: newBlob.type}));
+		            });
+		          }, "image/jpeg", 0.8);
+		        }else{
+		        	uploadFile(file);
+		        }
+		    },{ meta: true, orientation: true, canvas: true, maxWidth: 1080 });
+			};
+
+			function renderList(){
+				var res = {"code":"00000","data":{"id":72153214,"images":[{"fileName":"d398256a4ead467dbac64a26b9f3ab20.jpg","url":"https://plant.id/media/images/d398256a4ead467dbac64a26b9f3ab20.jpg"}],"suggestions":[{"id":403849369,"plantName":"Monstera deliciosa","plantDetails":{"commonNames":["Fruit Salad Plant","Swiss cheese plant"],"synonyms":["Monstera borsigiana","Monstera deliciosa var. borsigiana","Monstera deliciosa var. sierrana","Monstera tacanaensis","Philodendron anatomicum","Philodendron pertusum","Tornelia fragrans"],"watering":{"max":2,"min":2},"language":"en","scientificName":"Monstera deliciosa"},"probability":0.9524579633212235,"confirmed":false},{"id":403849370,"plantName":"Thaumatophyllum bipinnatifidum","plantDetails":{"commonNames":["lacy tree philodendron","selloum","horsehead philodendron"],"synonyms":["Arum pinnatifidum","Philodendron bipinnatifidum","Philodendron pygmaeum","Sphincterostigma bipinnatifidum"],"watering":{"max":2,"min":2},"language":"en","scientificName":"Thaumatophyllum bipinnatifidum"},"probability":0.022242724174783388,"confirmed":false}],"isPlantProbability":false,"isPlant":true},"msg":"success"};
+
+				onPlantInfo(res);
+			}
+
+			function onPlantInfo(res){
+				$(".upload").addClass("hide");
+				$("#result_list").removeClass("hide");
+				$(".loader").addClass("hide");
+
+				var datas = res.data.suggestions || [];
+				var cardTemplate = $("#results");
+				var cardParent = cardTemplate.parent();
+				console.log(datas);
+				for(var i in datas){
+				    var data = datas[i];
+				    var cardNode = cardTemplate.clone().appendTo(cardParent).removeClass("hide");
+				    cardNode.text(data.plantName);
+				    cardNode.click(data, selectData);
+				    data.url = res.data.images[0].url;
+				}
+			}
+
+			function showDataUI(){
+				$(".upload").addClass("hide");
+				$("#result_list").addClass("hide");
+				$('form').removeClass("hide");
+			}
+
+			function selectData(event){
+				showDataUI();
+
+				data = event.data;
+				console.log("selectData");
+				console.log(data);
+
+				$("#plant_name").val(data.plantName);
+				$("#plant_url").val(data.url);
+				$("#plant_humidity").val(parseInt((data.plantDetails.watering.max + data.plantDetails.watering.min)/2 * 10));
+			}
+
+			$(".skip-btn").click(showDataUI);
+
+			function uploadFile(file){
+				var formData = new FormData();
+				formData.append('file', file);
+
+				$(".loader").removeClass("hide");
+
+				$.post({
+					url: SERVER + "/plant/getPlantInfo", 
+					data: formData, 
+					success: onPlantInfo, 
+				  contentType: false,
+					processData: false,
+				}).fail(function(jqXHR, textStatus) {
+				    show_dialog("Plese check your internet network！" + textStatus);
+				    $(".loader").addClass("hide");
+				});
+			}
+
+			var id = getQueryString("id");
+
+			var plantName = getQueryString("name");
+			$("#plant_name").val(plantName);
+
+			if(!id){
+				$(".header").text("Add a new plant");
+				$("#btn-delete").addClass("hide");
+			}else{
+				showDataUI();
+			}
+
+			if(sensorId){
+				$("#sensor").val(sensorId);
+				$(".sensor-area").addClass("hide");
+			}
+
+			var plantHumidity = getQueryString("humidity");
+			$("#plant_humidity").val(plantHumidity || 20);
+
+			var numNode = $("#num");
+			numNode.bind("input propertychange", function() {
+				$("#pay_num").val((numNode.val() * 0.2).toFixed(2));
+			});
+
+			$('form').submit(function() {
+				plantName = trim($('#plant_name').val());
+				if(plantName == ""){
+					show_dialog("invalid plant name");
+					return false;
+				}
+
+
+				plantHumidity = trim($('#plant_humidity').val());
+				if (plantHumidity == "" || plantHumidity < 0 || plantHumidity > 100){
+					show_dialog("invalid humidity");
+					return false;
+				}
+
+				var imgurl = $("#plant_url").val();
+
+				sensorId = trim($("#sensor").val());
+				if(!sensorId || sensorId.length != 12){
+					show_dialog("invalid sensor");
+					return false;
+				}
+
+				var url = "/plant/addPlant";
+				if(id){
+					url = "/plant/update";
+					imgurl = null;
+				}
+				server(url, {
+					id: id,
+					sensorId: sensorId, 
+					plantName: plantName,
+					imageUrl: imgurl, 
+					threshold: plantHumidity
+				}, function(res){
+					// show_dialog(res.msg);
+					window.location.href = "./index.html";
+				});
+				return false;
+			});
+
+			$("#btn-delete").click(function(){
+				server("/plant/deletePlant?id=" + id, {}, function(res){
+					// show_dialog(res.msg);
+					window.location.href = "./index.html";
+				});
+			});
+
+			const html5QrCode = new Html5Qrcode("reader", { fps: 10, qrbox: {width: 250, height: 250} }, true);
+			document.getElementById('qr-input-file').addEventListener('change', e => {
+			  if (e.target.files.length == 0) {
+			    // No file selected, ignore 
+			    return;
+			  }
+
+			  // Use the first item in the list
+			  const imageFile = e.target.files[0];
+			  html5QrCode.scanFile(imageFile, false)
+			  .then(qrCodeMessage => {
+			    // success, use qrCodeMessage
+			    console.log(qrCodeMessage);
+			    $("#sensor").val(qrCodeMessage);
+			  })
+			  .catch(err => {
+			    // failure, handle it.
+			    console.log(err);
+			    show_dialog(`Error scanning file. Reason: ${err}`);
+			  });
+			});
+
+		});
+	</script>
+</body>
+</html>

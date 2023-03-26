@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/common.css"/>
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="content-type" content="txt/html; charset=utf-8" />
+	<title>Register</title>
+</head>
+
+<body>
+	<main>
+		<div class="container" style="margin-top: 40px">
+			<div class="row">
+				<div class="col s12 m6 offset-m3 center">
+					<h2 class="header">Register</h2>
+				</div>
+			</div>
+			<br />
+			<br />
+			<br />
+			<div class="row">
+				<form class="col s12">
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<i class="material-icons prefix">email</i>
+							<input name="email" id="icon_email" type="email" class="validate" required>
+							<label for="icon_email">Please input your email address</label>
+							<span class="helper-text" data-error="" data-success=""></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<i class="material-icons prefix">account_circle</i>
+							<input name="nickname" id="icon_nickname" type="text" class="validate" required>
+							<label for="icon_nickname">Please input your nickname</label>
+							<span class="helper-text" data-error="" data-success=""></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<i class="material-icons prefix">lock_outline</i>
+							<input name="password" id="icon_password" type="password" class="validate" required>
+							<label for="icon_password">Please input your password</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12" style="margin-bottom: -20px">
+							<i class="material-icons prefix">verified_user</i>
+							<input name="code" id="icon_code" type="text" class="validate" required>
+							<label for="icon_code">Verification Code</label>
+							<a href="javascript:void(0);" id="send_code"
+								class="btn offset-s7 border-round col s4"
+								style="border-radius:50px;top:4px;right:4px;position:absolute">Get Code
+							</a>
+							<p class="right grey-text">code will expire in 5 minitues</p>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="input-field col s10 offset-s1">
+							<a href="javascript:$('form').submit()"
+								class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12"
+								style="border-radius: 50px">Register</a>
+						</div>
+					</div>
+				</form>
+				<div class="row col s12 center">
+					<a class="black-text" href="./login.html">Login</a>
+				</div>
+			</div>
+		</div>
+	</main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+	<script type="text/javascript" src="js/func.js"></script>
+	<script type="text/javascript">
+		function InitSendCode(sendCodeName) {
+		    var timer = null;
+		    var sendCodeNode = $("#" + sendCodeName);
+
+		    sendCodeNode.click(function() {
+		    	var email = trim($('#icon_email').val());
+		    	if(!$("#icon_email").get()[0].validity.valid){
+		    		show_dialog("please input a valid email address!");
+		    		return;
+		    	}
+
+		        clearInterval(timer);
+		        var time = 60;
+		        timer = setInterval(function(){
+		            if(time <= 0){
+		                sendCodeNode.text();
+		                sendCodeNode.text("Resend");
+		                sendCodeNode.attr("disabled", false);
+		                clearInterval(timer);
+		            }else {
+		                sendCodeNode.text();
+		                sendCodeNode.attr("disabled", true);
+		                sendCodeNode.text("time:" + time + "sec");
+		                time--;
+		            }
+		        }, 1000);
+		    	
+		        server("/user/sendVerificationCode?email=" + email, function(ret) {
+		            show_dialog(ret.data || ret.msg);
+		        });
+		    });
+		}
+		
+		$(document).ready(function () {
+			InitSendCode('send_code');
+
+			$('form').submit(function() {
+				var data = {
+					"email": trim($('#icon_email').val()),
+					"userName": trim($("#icon_nickname").val()),
+					"password": trim($("#icon_password").val()),
+					"code": trim($('#icon_code').val())
+				};
+
+				if(!$("#icon_email").get()[0].validity.valid){
+					show_dialog("please input a valid email address!");
+					return false;
+				}
+
+				//TODO: valid username
+				if(data.userName == ""){
+					show_dialog("please input a valid nickname")
+					return false;
+				}
+
+				if(data.password.length > 16 || data.password.length < 6){
+					show_dialog("Please input a password with length from 6 to 16");
+					return false;
+				}
+
+				if (/^\d{6}$/.test(data.code) == false) {
+					show_dialog("Please input a valid verification code!");
+					return false
+				}
+				
+				server("/user/register", data, function(ret){
+					window.location.href = "./index.html";
+				});
+				return false;
+			});
+		});
+	</script>
+</body>
+</html>

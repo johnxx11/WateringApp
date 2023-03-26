@@ -1,0 +1,33 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #F3F5F9;
+}
+
+main {
+    flex: 10 auto;
+}
+.carousel.carousel-slider .carousel-item {
+    min-height:100px;
+}
+
+/*main {
+    flex: 1 0 auto;
+}*/
+.header {
+    color: #57b557;
+}
+
+.btn {
+    background-color:#57b557;
+    border-radius: 8px;
+}
+
+.btn:hover, .btn-large:hover, .btn-small:hover {
+    background-color:#5A9E5A
+}
+
+.input-field .prefix.active {
+    color:#5A9E5A
+}

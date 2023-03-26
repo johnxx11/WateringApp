@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="css/common.css"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-type" content="txt/html; charset=utf-8" />
+    <title>Home</title>
+</head>
+<body>
+    <main>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 center">
+                <h5 class="header hide">Hi, <span id="nickname">Guest</span>. Welcome to smart plant care system.</h5>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row loader center">
+                <div class="preloader-wrapper big active">
+                  <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+
+                  <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+
+            <div class="row hide" id="card-template">
+                <div class="col s12 m6 offset-m3 center">
+                    <div class="card large">
+                        <div class="card-image">
+                            <img class="card_img" src="images/deafult_plant.jpg" loading="lazy" />
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">monstera deliciosa</span>
+                            <div class="row">
+                                <div class="col s6"><h5><span class="humidity">78</span></h5></div>
+                                <div class="col s6 date-field"><h5 class="date">7 days ago</h5></div>
+                                <div class="col s6 blue-text hide watering"><h5>watering</h5></div>
+                                <div class="col s6"><h8>current humidity</h8></div>
+                                <div class="col s6"><h8>last water date</h8></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row center empty-plants hide">
+                <div class="col s12">
+                    <img src="images/start.jpg" class="responsive-img"/>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 center">
+            <a class="btn btn-large waves-light" href="./setting.html">Add a new plant</a>
+        </div>
+        <div class="row"></div>
+        <div class="row col s12 center">
+            <a class="grey-text" href="javascript:logout()">Logout</a>
+        </div>
+    </main>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    
+    <script type="text/javascript" src="js/func.js"></script>
+    <script type="text/javascript">
+        function goSetting(event){
+            window.location.href="setting.html?" + $.param(event.data);
+        }
+
+        function logout(){
+            $.removeCookie('token');
+            window.location.href = "login.html";
+        }
+
+        function parseDate(t){
+            if(!t) return "no information";
+
+            var msec = parseInt((Date.now() - Date.parse(t) + 15 * 60 * 60 * 1000) / 1000);
+            var date = "";
+            if(msec < 60){
+                date = "just now";
+            }else if(msec < 2 * 60){
+                date = "1 minute ago";
+            }
+            else if(msec < 60 * 60){
+                date = parseInt(msec / 60) + " minutes ago";
+            }else if(msec < 60 * 60 * 2){
+                date = "1 hour ago";
+            }else if(msec < 60 * 60 * 24){
+                date = parseInt(msec / 60 / 60) + " hours ago";
+            }else if(msec < 60 * 60 * 24 * 2){
+                date = "1 day ago";
+            }else{
+                date = parseInt(msec / 60 / 60 / 24) + " days ago";
+            }
+            return date;
+        }
+
+        $(document).ready(function(){
+            if(!$.cookie('token')){
+                window.location.href = "login.html";
+                return;
+            }
+
+            var nickname = $.cookie('nickname');
+            $("#nickname").text(nickname);
+
+            var cardTemplate = $("#card-template");
+            var cardParent = cardTemplate.parent();
+            var offset = cardParent.children().length;
+
+            function update(){
+                server("/plant/getAllPlants", null, function(res){
+                    $(".loader").addClass("hide");
+                    $(".header").removeClass("hide");
+
+                    var datas = res.data || [];
+
+                    console.log(datas);
+                    if(datas.length > 0){
+                        $(".fixed-action-btn").removeClass("hide");
+                        $(".empty-plants").addClass("hide");
+                    }else{
+                        $(".empty-plants").removeClass("hide");
+                    }
+
+                    var children = cardParent.children();
+
+                    for(var i in datas){
+                        var data = datas[i];
+
+                        if(typeof(data) == "string"){
+                            data = JSON.parse(data);
+                        }
+                        
+                        // data.id = i;
+                        data.sensor = data.sensor || {}
+
+                        var cardNode = children[parseInt(i) + offset];
+                        console.log("cardNode: ", i, offset, children.length);
+
+                        if(!cardNode){
+                            cardNode = cardTemplate.clone().appendTo(cardParent).removeClass("hide");
+                        }else{
+                            cardNode = $(cardNode);
+                        }
+                        
+                        $(".card-title", cardNode).text(data.plant.plantName);
+
+                        var currentHumidity = parseInt(data.sensor.currentHumidity);
+                        if(isNaN(currentHumidity)){
+                            currentHumidity = data.sensor.currentHumidity;
+                        }else{
+                            currentHumidity = currentHumidity + "%";
+                        }
+
+                        $(".humidity", cardNode).text(currentHumidity);
+                        $(".card_img", cardNode).attr("src", data.plant.imageUrl);
+                        
+                        if(data.sensor.status == 1){
+                            $(".date-field", cardNode).addClass("hide");
+                            $(".watering", cardNode).removeClass("hide");
+                        }else{
+                            $(".date-field", cardNode).removeClass("hide");
+                            $(".watering", cardNode).addClass("hide");
+                            $(".date", cardNode).text(parseDate(data.sensor.lastWaterTime));
+                        }
+                        // $(".btn-setting", cardNode).click({
+                        $(".card", cardNode).click({
+                            id: data.plant.id, name: data.plant.plantName, humidity: data.plant.threshold,
+                            sensor: data.sensor.sensorId
+                        }, goSetting);
+                    }
+                }, function(){
+                    // $.removeCookie('token');
+                    // window.location.href = "login.html";
+                });
+            }
+
+            setInterval(update, 3000);
+            update();
+        });
+    </script>
+</body>
+
+</html>
